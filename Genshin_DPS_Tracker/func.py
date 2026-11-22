@@ -269,14 +269,6 @@ def buat_id_acak(daftar_data):
             return id_baru
 
 def tampilkan_grafik_riwayat(daftar_riwayat, username_aktif=None):
-    try:
-        import matplotlib.pyplot as plt
-        import matplotlib.ticker as ticker
-    except ImportError:
-        print("\n--> Error: Library 'matplotlib' belum terinstal.")
-        print("    Jalankan perintah ini di terminal: pip install matplotlib")
-        return
-
     # 1. Kelompokkan DPS berdasarkan tim & build
     data_tim = {}
     for data_tes in daftar_riwayat:
