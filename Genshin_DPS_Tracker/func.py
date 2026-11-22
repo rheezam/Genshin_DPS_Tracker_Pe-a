@@ -5,6 +5,7 @@ from prettytable import PrettyTable, ALL
 import data
 from data import akun, genshin_characters, preset, dummy, team, build, riwayat
 
+
 # VARIABEL GLOBAL (dipakai oleh banyak fungsi)
 clear_cmd = "cls" if os.name == "nt" else "clear"
 garis_40 = "=" * 40
