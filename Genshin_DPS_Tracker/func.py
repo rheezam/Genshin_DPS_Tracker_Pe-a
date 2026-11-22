@@ -1,6 +1,8 @@
 import os
 import random
 from datetime import datetime
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 from prettytable import PrettyTable, ALL
 import data
 from data import akun, genshin_characters, preset, dummy, team, build, riwayat
@@ -264,3 +266,97 @@ def buat_id_acak(daftar_data):
         id_baru = random.randint(100,9999)
         if id_baru not in id_terpakai:
             return id_baru
+
+def tampilkan_grafik_riwayat(daftar_riwayat, username_aktif=None):
+    try:
+        import matplotlib.pyplot as plt
+        import matplotlib.ticker as ticker
+    except ImportError:
+        print("\n--> Error: Library 'matplotlib' belum terinstal.")
+        print("    Jalankan perintah ini di terminal: pip install matplotlib")
+        return
+
+    # 1. Kelompokkan DPS berdasarkan tim & build
+    data_tim = {}
+    for data_tes in daftar_riwayat:
+        label_tim = (
+            data_tes["nama_tim"]
+            if username_aktif
+            else f"{data_tes['nama_tim']}\n({data_tes['username']})"
+        )
+        nama_build = data_tes["nama_build"]
+        data_tim.setdefault(label_tim, {}).setdefault(nama_build, []).append(data_tes["dps"])
+
+    # Ambil DPS tertinggi tiap build dan urutkan dari kecil ke besar di dalam tiap tim
+    ringkasan_tim = {}
+    total_semua_build = 0
+    for label_tim, daftar_build in data_tim.items():
+        build_terurut = sorted(
+            [(nb, max(daftar_dps)) for nb, daftar_dps in daftar_build.items()],
+            key=lambda x: x[1]
+        )
+        ringkasan_tim[label_tim] = build_terurut
+        total_semua_build += len(build_terurut)
+
+    # Urutkan tim berdasarkan rekor DPS tertinggi (tim terkuat berada di posisi paling atas)
+    tim_terurut = sorted(
+        ringkasan_tim.items(),
+        key=lambda x: max(item[1] for item in x[1])
+    )
+
+    # 2. Tinggi kanvas dinamis
+    tinggi_kanvas = min(16.0, max(5.0, total_semua_build * 0.55 + len(tim_terurut) * 0.3))
+    fig, ax = plt.subplots(figsize=(11, tinggi_kanvas))
+
+    warna_palet = plt.cm.tab10.colors
+    semua_nilai_dps = []
+
+    # 3. Gambar Horizontal Grouped Bar Chart per tim
+    for idx_tim, (label_tim, list_build) in enumerate(tim_terurut):
+        jumlah_build = len(list_build)
+        tinggi_bar = min(0.32, 0.78 / jumlah_build)
+
+        for idx_build, (nama_build, dps_peak) in enumerate(list_build):
+            semua_nilai_dps.append(dps_peak)
+            offset = (idx_build - (jumlah_build - 1) / 2) * tinggi_bar
+            posisi_y = idx_tim + offset
+
+            batang = ax.barh(
+                posisi_y,
+                dps_peak,
+                height=tinggi_bar * 0.85,
+                color=warna_palet[idx_build % len(warna_palet)],
+                edgecolor="white"
+            )
+            ax.bar_label(
+                batang,
+                labels=[f" {nama_build}: {dps_peak:,.0f}"],
+                fontsize=8.5,
+                fontweight="bold"
+            )
+
+        if idx_tim < len(tim_terurut) - 1:
+            ax.axhline(idx_tim + 0.5, color="#cbd5e1", linestyle="-", linewidth=1)
+
+    judul_grafik = (
+        f"Perbandingan Build per Tim - Akun: {username_aktif}"
+        if username_aktif
+        else "Perbandingan Build per Tim - Seluruh Aktivitas User"
+    )
+
+    ax.set_yticks(range(len(tim_terurut)))
+    ax.set_yticklabels([t[0] for t in tim_terurut], fontsize=9.5, fontweight="bold")
+    ax.set_ylim(-0.5, len(tim_terurut) - 0.5)
+    ax.set_xlabel("DPS Tertinggi (Damage Per Second)")
+    ax.set_title(judul_grafik, fontsize=13, fontweight="bold")
+    ax.xaxis.set_major_formatter(ticker.StrMethodFormatter("{x:,.0f}"))
+    ax.grid(axis="x", linestyle="--", alpha=0.5)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    if semua_nilai_dps:
+        ax.set_xlim(0, max(semua_nilai_dps) * 1.45)
+
+    print("\nMenampilkan grafik... Tutup jendela grafik untuk melanjutkan.")
+    plt.tight_layout()
+    plt.show()

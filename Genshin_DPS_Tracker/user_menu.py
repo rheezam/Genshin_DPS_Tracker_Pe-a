@@ -516,7 +516,6 @@ def menu_catat_dps(username_aktif):
             continue
         catat_tes_baru(username_aktif)
 
-# USER - RIWAYAT PENGUJIAN
 def lihat_daftar_riwayat(username_aktif):
     bersihkan_layar()
     cetak_header("                 DAFTAR RIWAYAT DPS", garis_55)
@@ -538,6 +537,17 @@ def lihat_daftar_riwayat(username_aktif):
             print("Target Dummy :", dummy_dipilih["nama"] if dummy_dipilih else "Dummy tidak ditemukan")
             print("Hasil DPS    :", format_ribuan(data_tes["dps"]))
             print(strip_55)
+
+        while True:
+                    tampilkan = input("\nTampilkan grafik perbandingan DPS? (ya/tidak): ").strip().lower()
+                    if tampilkan in ("ya", "y"):
+                        tampilkan_grafik_riwayat(riwayat_saya, username_aktif)
+                        break
+                    elif tampilkan in ("tidak", "t"):
+                        break
+                    else:
+                        print("--> Error: Pilihan tidak valid. Ketik 'ya' atau 'tidak'.")
+
     jeda()
 
 def lihat_detail_riwayat(username_aktif):

@@ -380,6 +380,16 @@ def lihat_aktivitas_user():
                 format_ribuan(r["dps"])
             ])
         print(tabel_riwayat)
+
+        while True:
+            tampilkan = input(f"\nTampilkan grafik perbandingan DPS milik {username_cari}? (ya/tidak): ").strip().lower()
+            if tampilkan in ("ya", "y"):
+                tampilkan_grafik_riwayat(riwayat_user, username_cari)
+                break
+            elif tampilkan in ("tidak", "t"):
+                break
+            else:
+                print("--> Error: Pilihan tidak valid. Ketik 'ya' atau 'tidak'.")
     else:
         print("User ini belum punya riwayat tes.")
 
