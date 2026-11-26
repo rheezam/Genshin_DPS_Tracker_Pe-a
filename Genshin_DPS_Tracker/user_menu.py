@@ -2,6 +2,8 @@ from data import akun, genshin_characters, preset, dummy, team, build, riwayat
 from func import *
 import random
 
+#1
+#Menampilkan karakter pada data, pemformatan prettytable, perulangan mengakses key:value
 # USER - DAFTAR KARAKTER
 def lihat_daftar_karakter():
     bersihkan_layar()
@@ -33,6 +35,8 @@ def lihat_daftar_karakter():
     print("Total Karakter:", hitung_total_karakter())
     jeda()
 
+#2
+#Menampilkan tim user dengan akses data, menggunakan variabel (nama_karakter) untuk mendapatkan elemen
 # USER - KELOLA TIM
 def lihat_tim_saya(username_aktif):
     bersihkan_layar()
@@ -52,6 +56,8 @@ def lihat_tim_saya(username_aktif):
             print(strip_40)
     jeda()
 
+#3
+#Membuat tim, dilakukan pengecekan nama tim (tidak boleh duplikat), dilakukan pada func kumpulkkan_anggota_tim
 def buat_tim(username_aktif):
     bersihkan_layar()
     cetak_header("               BUAT TIM", garis_40)
@@ -90,6 +96,8 @@ def buat_tim(username_aktif):
     finally:
         jeda()
 
+#4
+#Perubahan pada nama tim user, tidak duplikat
 def ubah_nama_tim(tim_dipilih, username_aktif):
     nama_baru = input("Nama tim baru (Enter untuk tetap): ").strip()
     if nama_baru == "":
@@ -108,6 +116,8 @@ def ubah_nama_tim(tim_dipilih, username_aktif):
     else:
         tim_dipilih["nama_tim"] = nama_baru
 
+#5
+#Perubahan anggota tim dari tim milik user, func validasi_anggota_baru, lgsg input byk
 def ubah_anggota_tim(tim_dipilih):
     print("\nAnggota saat ini:", tim_dipilih["karakter"])
     print("Masukkan karakter baru dipisahkan dengan koma.")
@@ -145,6 +155,8 @@ def ubah_anggota_tim(tim_dipilih):
         tim_dipilih["elemen"] = elemen_baru
         print("Anggota tim berhasil diperbarui.")
 
+#6
+#Perubahan secara keseluruhan tim (tidak seperti ubah_nama_tim / ubah_anggota_tim)
 def ubah_tim(username_aktif):
     bersihkan_layar()
     cetak_header("               UBAH TIM", garis_40)
@@ -175,6 +187,8 @@ def ubah_tim(username_aktif):
     print("\nProses perubahan tim selesai.")
     jeda()
 
+#7
+#Menghapus tim menggunakan input id tim dan remove ke data team
 def hapus_tim(username_aktif):
     bersihkan_layar()
     cetak_header("              HAPUS TIM", garis_40)
@@ -204,6 +218,8 @@ def hapus_tim(username_aktif):
     finally:
         jeda()
 
+#8
+#menu kelola tim user
 def kelola_tim(username_aktif):
     while True:
         bersihkan_layar()
@@ -229,6 +245,8 @@ def kelola_tim(username_aktif):
             print("Pilihan tidak valid.")
             jeda("\nTekan Enter untuk mencoba lagi...")
 
+#9
+#Menampilkan build tim (karakter, elemen, senjata, artefak), menggunakan func cetak_karakter_build
 # USER - KELOLA BUILD KARAKTER
 def lihat_build_saya(username_aktif):
     bersihkan_layar()
@@ -247,6 +265,8 @@ def lihat_build_saya(username_aktif):
             print(strip_45)
     jeda()
 
+#10
+#Mmebuat build dari input id tim
 def buat_build(username_aktif):
     bersihkan_layar()
     tim_saya = ambil_tim_saya(username_aktif)
@@ -289,7 +309,10 @@ def buat_build(username_aktif):
     })
     print("\nKonfigurasi build berhasil disimpan.")
     print("ID Build:", id_build_baru)
+    jeda()
 
+#11
+#Mengedit build dari tim dipilih
 def edit_build(username_aktif):
     bersihkan_layar()
     build_saya = ambil_build_saya(username_aktif)
@@ -348,8 +371,10 @@ def edit_build(username_aktif):
     except (ValueError, IndexError) as e:
         print(e)
     finally:
-        jeda()
+        jeda(enter_kembali_rapat)
 
+#12
+#Menghapus build terpilih
 def hapus_build(username_aktif):
     bersihkan_layar()
     build_saya = ambil_build_saya(username_aktif)
@@ -389,6 +414,8 @@ def hapus_build(username_aktif):
     finally:
         jeda(enter_kembali_rapat)
 
+#13
+#menu kelola build
 def kelola_build(username_aktif):
     while True:
         bersihkan_layar()
@@ -414,6 +441,8 @@ def kelola_build(username_aktif):
             print("Pilihan tidak valid.")
             jeda(enter_kembali_rapat)
 
+#14
+#Mencatat dps melalui alur, milih id build - preset - dummy - validasi/konfirmasi - input hasil dps
 # USER - CATAT HASIL PENGUJIAN DPS
 def catat_tes_baru(username_aktif):
     bersihkan_layar()
@@ -500,6 +529,8 @@ def catat_tes_baru(username_aktif):
         print("Hasil DPS  :", format_ribuan(hasil_dps))
     jeda()
 
+#15
+#menu catat dps
 def menu_catat_dps(username_aktif):
     while True:
         bersihkan_layar()
@@ -516,6 +547,8 @@ def menu_catat_dps(username_aktif):
             continue
         catat_tes_baru(username_aktif)
 
+#16
+#tampilan riwayat ringkas dan visualisasi
 def lihat_daftar_riwayat(username_aktif):
     bersihkan_layar()
     cetak_header("                 DAFTAR RIWAYAT DPS", garis_55)
@@ -539,17 +572,19 @@ def lihat_daftar_riwayat(username_aktif):
             print(strip_55)
 
         while True:
-                    tampilkan = input("\nTampilkan grafik perbandingan DPS? (ya/tidak): ").strip().lower()
-                    if tampilkan in ("ya", "y"):
-                        tampilkan_grafik_riwayat(riwayat_saya, username_aktif)
-                        break
-                    elif tampilkan in ("tidak", "t"):
-                        break
-                    else:
-                        print("--> Error: Pilihan tidak valid. Ketik 'ya' atau 'tidak'.")
+            tampilkan = input("\nTampilkan grafik perbandingan DPS? (ya/tidak): ").strip().lower()
+            if tampilkan in ("ya", "y"):
+                tampilkan_grafik_riwayat(riwayat_saya, username_aktif)
+                break
+            elif tampilkan in ("tidak", "t"):
+                break
+            else:
+                print("--> Error: Pilihan tidak valid. Ketik 'ya' atau 'tidak'.")
 
     jeda()
 
+#17
+#Menampilkan riwayat detail
 def lihat_detail_riwayat(username_aktif):
     bersihkan_layar()
     cetak_header("                 DETAIL RIWAYAT DPS", garis_55)
@@ -601,6 +636,8 @@ def lihat_detail_riwayat(username_aktif):
     print(garis_55)
     jeda()
 
+#18
+#menu pilihan riwayat
 def menu_riwayat(username_aktif):
     while True:
         bersihkan_layar()
@@ -620,6 +657,8 @@ def menu_riwayat(username_aktif):
             print("Pilihan tidak valid.")
             jeda("Tekan Enter untuk melanjutkan...")
 
+#19
+#menampilkan preset
 def lihat_preset():
     bersihkan_layar()
     cetak_header("             PRESET PENGUJIAN DPS", garis_55)
@@ -633,6 +672,8 @@ def lihat_preset():
         print(tabel_p)
     jeda()
 
+#20
+#menampilkan dummy
 def lihat_dummy():
     bersihkan_layar()
     cetak_header("                TARGET DUMMY", garis_55)
@@ -646,6 +687,7 @@ def lihat_dummy():
         print(tabel_d)
     jeda()
 
+#21
 # MENU USER
 def menu_user(username_aktif):
     while True:
