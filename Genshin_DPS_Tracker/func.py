@@ -7,8 +7,6 @@ from prettytable import PrettyTable, ALL
 import data
 from data import akun, genshin_characters, preset, dummy, team, build, riwayat
 
-
-# VARIABEL GLOBAL (dipakai oleh banyak fungsi)
 clear_cmd = "cls" if os.name == "nt" else "clear"
 garis_40 = "=" * 40
 garis_45 = "=" * 45
@@ -57,31 +55,16 @@ def buat_tabel_dummy():
     tabel.hrules = ALL
     return tabel
 
-# FUNGSI REKURSIF
 def format_ribuan(angka):
-    # Base case
     if angka < 1000:
         return str(angka)
-    # Recursive case
     return format_ribuan(angka // 1000) + "." + str(angka % 1000).zfill(3)
 
-def cari_nama(daftar_nama, nama, indeks=0):
-    # Base case 1: sudah sampai akhir list
-    if indeks >= len(daftar_nama):
-        return None
-    # Base case 2: ditemukan
-    if daftar_nama[indeks].lower() == nama.lower():
-        return daftar_nama[indeks]
-    # Recursive case
-    return cari_nama(daftar_nama, nama, indeks + 1)
+def cari_nama(daftar_nama, nama):
+    return next((item for item in daftar_nama if item.lower() == nama.strip().lower()), None)
 
-# FUNGSI DENGAN PARAMETER
 def cari_karakter(nama):
-    try:
-        return cari_nama(list(genshin_characters), nama)
-    except RecursionError:
-        # Cadangan jika daftar karakter terlalu panjang untuk rekursi
-        return next((item for item in genshin_characters if item.lower() == nama.lower()), None)
+    return cari_nama(genshin_characters, nama)
 
 def baca_id(teks, label):
     if not teks.isdigit():
@@ -180,11 +163,11 @@ def kumpulkan_anggota_tim():
 
 def kumpulkan_build_karakter(tim_dipilih):
     karakter_build = []
-    print("\nMasukkan build setiap karakter dalam tim.")
-    print("Isi senjata dan artefak untuk karakter tim.\n")
+    print("Masukkan build setiap karakter dalam tim.")
+    print("Isi senjata dan artefak untuk karakter tim.")
 
     for nomor, nama_karakter in enumerate(tim_dipilih["karakter"], start=1):
-        print(f"\nKarakter {nomor}: {nama_karakter}")
+        print(f"Karakter {nomor}: {nama_karakter}")
         elemen = tim_dipilih["elemen"][nama_karakter]
         senjata = input("Nama senjata: ").strip()
         artefak = input("Nama artefak: ").strip()
@@ -204,14 +187,12 @@ def kumpulkan_build_karakter(tim_dipilih):
             })
     return karakter_build
 
-# FUNGSI TANPA PARAMETER (mengembalikan nilai)
 def minta_pilihan():
     return input("Pilih menu: ").strip()
 
 def hitung_total_karakter():
     return len(genshin_characters)
 
-# PROSEDUR (tanpa return) - TAMPILAN UMUM
 def bersihkan_layar():
     os.system(clear_cmd)
 
@@ -280,7 +261,7 @@ def tampilkan_grafik_riwayat(daftar_riwayat, username_aktif=None):
         nama_build = data_tes["nama_build"]
         data_tim.setdefault(label_tim, {}).setdefault(nama_build, []).append(data_tes["dps"])
 
-    # Ambil DPS tertinggi tiap build dan urutkan dari kecil ke besar di dalam tiap tim
+    # mengambil DPS tertinggi dari tiap build dan urutkan dari kecil ke besar di dalam tiap tim
     ringkasan_tim = {}
     total_semua_build = 0
     for label_tim, daftar_build in data_tim.items():
@@ -350,6 +331,6 @@ def tampilkan_grafik_riwayat(daftar_riwayat, username_aktif=None):
     if semua_nilai_dps:
         ax.set_xlim(0, max(semua_nilai_dps) * 1.45)
 
-    print("\nMenampilkan grafik... Tutup jendela grafik untuk melanjutkan.")
+    print("Menampilkan grafik... Tutup jendela grafik untuk melanjutkan.")
     plt.tight_layout()
     plt.show()
