@@ -17,6 +17,7 @@ strip_55 = "-" * 55
 enter_kembali = "\nTekan Enter untuk kembali..."
 enter_kembali_rapat = "Tekan Enter untuk kembali..."
 
+# mengambil waktu daru komputer dan di ubah menjadi str - user
 def waktu_tes():
     return datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
@@ -73,6 +74,7 @@ def baca_id(teks, label):
 
 def pilih_id(data, prompt, label, pesan_tidak_ditemukan):
     id_target = baca_id(input(prompt).strip(), label)
+
     if id_target not in data:
         raise ValueError(pesan_tidak_ditemukan)
     return id_target
@@ -80,6 +82,7 @@ def pilih_id(data, prompt, label, pesan_tidak_ditemukan):
 def pilih_dari_daftar(daftar, prompt, label, pesan_tidak_ditemukan):
     id_target = baca_id(input(prompt).strip(), label)
     data_dipilih = next((item for item in daftar if item["id"] == id_target), None)
+
     if data_dipilih is None:
         raise ValueError(pesan_tidak_ditemukan)
     return data_dipilih
@@ -89,10 +92,12 @@ def tentukan_elemen(nama_valid):
     if not isinstance(elemen, set):
         return elemen
     print("Pilihan elemen Traveler:")
+
     for pilihan_elemen in sorted(elemen):
         print("-", pilihan_elemen)
     elemen_pilihan = input("Pilih elemen Traveler: ").strip()
     elemen_valid = cari_nama(sorted(elemen), elemen_pilihan)
+
     if elemen_valid is None:
         raise ValueError("Elemen Traveler tidak valid.")
     return elemen_valid
@@ -100,20 +105,24 @@ def tentukan_elemen(nama_valid):
 def validasi_akun_baru(username_baru, password_baru):
     if username_baru == "" or password_baru.strip() == "":
         raise ValueError("Username dan password tidak boleh kosong.")
+    
     if username_baru in akun:
         raise ValueError("Username sudah digunakan.")
 
 def validasi_anggota_baru(daftar_baru):
     karakter_valid = []
     elemen_baru = {}
+
     for nama in daftar_baru:
         nama_valid = cari_karakter(nama)
         if nama_valid is None:
             raise ValueError("Karakter tidak ditemukan: " + nama)
+        
         if nama_valid in karakter_valid:
             raise ValueError("Karakter duplikat: " + nama_valid)
         elemen_baru[nama_valid] = tentukan_elemen(nama_valid)
         karakter_valid.append(nama_valid)
+
     return karakter_valid, elemen_baru
 
 def tim_dipakai(id_tim):
@@ -152,8 +161,10 @@ def kumpulkan_anggota_tim():
             if nama_valid in karakter_tim:
                 raise ValueError("Karakter tersebut sudah ada di tim.")
             elemen = tentukan_elemen(nama_valid)
+
         except ValueError as e:
             print(e)
+
         else:
             elemen_tim[nama_valid] = elemen
             karakter_tim.append(nama_valid)
@@ -175,9 +186,11 @@ def kumpulkan_build_karakter(tim_dipilih):
         try:
             if not senjata or not artefak:
                 raise ValueError("Senjata dan artefak tidak boleh kosong.")
+            
         except ValueError as e:
             print(e)
             return []
+        
         else:
             karakter_build.append({
                 "karakter": nama_karakter,
@@ -185,6 +198,7 @@ def kumpulkan_build_karakter(tim_dipilih):
                 "senjata": senjata,
                 "artefak": artefak
             })
+
     return karakter_build
 
 def minta_pilihan():
@@ -222,6 +236,7 @@ def tampilkan_pilihan_preset():
     print("\n" + garis_45)
     print("           PILIH PRESET TES")
     print(garis_45)
+
     for id_item, data_preset in preset.items():
         print(f'\nID Preset : {id_item}')
         print(f'Nama      : {data_preset["nama"]}')
@@ -231,6 +246,7 @@ def tampilkan_pilihan_dummy():
     print("\n" + garis_45)
     print("          PILIH TARGET DUMMY")
     print(garis_45)
+
     for id_item, data_dummy in dummy.items():
         print(f'\nID Dummy  : {id_item}')
         print(f'Nama      : {data_dummy["nama"]}')
